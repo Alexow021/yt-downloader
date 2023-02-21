@@ -22,13 +22,12 @@ def start( update , context ):
 
 
 def help( update , context ):
-    update.message.reply_text("""/start restart bot from begin \n/YouTube for download YT videos and show what bot can do with that command\nany issues contact with me : @id""")
+    update.message.reply_text("""/start restart bot from begin \n/YouTube for download YT videos as MP3 file\nany issues contact with me : @m0ha21ad""")
 
 
 
 def stop(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id ,text=""" 
-            we're sorry if it's not '1080p' because it's a restriction from Telegram\nCheck telegram api limits https://core.telegram.org/bots/api#senddocument\nbut we're found solution..we will fix it soon...""")
+    context.bot.send_message(chat_id=update.effective_chat.id ,text="Enjoy Ur Music :)")
     return ConversationHandler.END
 
 
@@ -36,7 +35,7 @@ def stop(update, context):
 
 
 def ask_for_link(update,context):
-    context.bot.send_message(chat_id=update.effective_chat.id ,text="Please Paste the video link here and wait for download... :) [we have api limitations]")
+    context.bot.send_message(chat_id=update.effective_chat.id ,text="Please Paste the video link here and wait for download... :)")
     return DOWNLOADER
 
 def Downloader(update,context):
@@ -44,11 +43,12 @@ def Downloader(update,context):
         link=str(update.message.text)
 
         Video_Url = YouTube(link)
-        Video = Video_Url.streams.filter(file_extension='mp4').get_highest_resolution()
+        Video = Video_Url.streams.filter(file_extension='mp4' , only_audio= True).get_audio_only()
         vd = Video.download()
 
-        context.bot.send_message(chat_id=update.effective_chat.id , text = f"'{Video.title}' has Downloaded successfully! [if not received video because of api limitations please wait 60sec then try again]")
-        context.bot.send_video(chat_id=update.effective_chat.id , video = open(vd , 'rb'))
+        context.bot.send_message(chat_id=update.effective_chat.id , text = f"'{Video.title}' has Downloaded successfully!")
+        #context.bot.send_video(chat_id=update.effective_chat.id , video = open(vd , 'rb') , )
+        context.bot.send_audio(chat_id=update.effective_chat.id , audio = open(vd , 'rb'))
 
         stop(update , context)
         os.remove(vd)
